@@ -679,5 +679,150 @@ section {
     }
 }
 
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+}
+
+.modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-content {
+    position: relative;
+    background: var(--white);
+    border-radius: 15px;
+    max-width: 90%;
+    max-height: 90vh;
+    width: 600px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    z-index: 2001;
+    overflow: hidden;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.1);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 24px;
+    color: var(--text-dark);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2002;
+    transition: var(--transition);
+    line-height: 1;
+}
+
+.modal-close:hover {
+    background: rgba(0, 0, 0, 0.2);
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    padding: 3rem;
+    overflow-y: auto;
+    max-height: calc(90vh - 6rem);
+}
+
+.modal-body h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.modal-body h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.modal-body p {
+    color: var(--text-light);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.modal-body img {
+    width: 100%;
+    border-radius: 10px;
+    margin: 1.5rem 0;
+    box-shadow: var(--shadow);
+}
+
+.modal-image-container {
+    width: 100%;
+    height: 300px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    margin: 1.5rem 0;
+    box-shadow: var(--shadow);
+}
+
+/* Service card and portfolio item cursor */
+.service-card {
+    cursor: pointer;
+}
+
+.portfolio-item {
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        max-height: 95vh;
+    }
+
+    .modal-body {
+        padding: 2rem 1.5rem;
+    }
+
+    .modal-body h2,
+    .modal-body h3 {
+        font-size: 1.5rem;
+    }
+}
+
 
 

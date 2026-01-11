@@ -127,11 +127,113 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Portfolio item click handler (for future lightbox functionality)
-document.querySelectorAll('.portfolio-item').forEach(item => {
+// Modal functionality
+const modal = document.getElementById('modal');
+const modalBackdrop = document.getElementById('modalBackdrop');
+const modalClose = document.getElementById('modalClose');
+const modalBody = document.getElementById('modalBody');
+
+// Store timeout reference to clear it if needed
+let modalCloseTimeout = null;
+
+function openModal(content) {
+    // Clear any pending close timeout to prevent race conditions
+    if (modalCloseTimeout) {
+        clearTimeout(modalCloseTimeout);
+        modalCloseTimeout = null;
+    }
+    
+    // Set content immediately
+    modalBody.innerHTML = content;
+    
+    // If modal is already open, we don't need to re-add the class
+    // but we ensure it's visible
+    if (!modal.classList.contains('active')) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+}
+
+function closeModal() {
+    // Clear any pending close timeout
+    if (modalCloseTimeout) {
+        clearTimeout(modalCloseTimeout);
+        modalCloseTimeout = null;
+    }
+    
+    modal.classList.remove('active');
+    document.body.style.overflow = ''; // Restore scrolling
+    
+    // Clear content after animation completes
+    modalCloseTimeout = setTimeout(() => {
+        modalBody.innerHTML = '';
+        modalCloseTimeout = null;
+    }, 300); // Clear content after animation
+}
+
+// Close modal when clicking backdrop or close button
+modalBackdrop.addEventListener('click', closeModal);
+modalClose.addEventListener('click', closeModal);
+
+// Close modal with Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Service card click handler
+document.querySelectorAll('.service-card').forEach(card => {
+    card.addEventListener('click', () => {
+        const title = card.querySelector('h3').textContent;
+        const description = card.querySelector('p').textContent;
+        
+        const modalContent = `
+            <h2>${title}</h2>
+            <p>${description}</p>
+            <p>Contact us today to learn more about our ${title.toLowerCase()} services and get a free consultation for your project.</p>
+        `;
+        
+        openModal(modalContent);
+    });
+});
+
+// Portfolio item click handler
+document.querySelectorAll('.portfolio-item').forEach((item, index) => {
     item.addEventListener('click', () => {
-        // This could open a lightbox or modal in the future
-        console.log('Portfolio item clicked');
+        const overlay = item.querySelector('.portfolio-overlay');
+        const title = overlay.querySelector('h3').textContent;
+        const subtitle = overlay.querySelector('p').textContent;
+        const portfolioImage = item.querySelector('.portfolio-image');
+        
+        // Get background image URL
+        const imageId = portfolioImage.id;
+        let imageUrl = '';
+        
+        // Map portfolio IDs and titles to image URLs
+        const imageMap = {
+            'kitchen': 'assets/kitchen.jpg',
+            'bathroom': 'assets/bathroom.jpg',
+            'fireplace': 'assets/step3.jpg',
+            'Custom Flooring': 'assets/stairs.jpg',
+            'Outdoor Patio': 'assets/outdoor_grill.jpg',
+            'Commercial Project': 'assets/kitchen-commercial.jpg'
+        };
+        
+        // Try to get image by title first, then by ID, then by index
+        imageUrl = imageMap[title] || imageMap[imageId] || 
+                   (index === 3 ? 'assets/stairs.jpg' : 
+                    index === 4 ? 'assets/outdoor_grill.jpg' : 
+                    index === 5 ? 'assets/kitchen-commercial.jpg' : 'assets/kitchen.jpg');
+        
+        const modalContent = `
+            <h2>${title}</h2>
+            <p class="modal-subtitle" style="color: var(--secondary-color); font-size: 1.2rem; margin-bottom: 1.5rem;">${subtitle}</p>
+            <div class="modal-image-container" style="background-image: url('${imageUrl}');"></div>
+            <p>This project showcases our expertise in ${subtitle.toLowerCase()}. Our team worked closely with the client to bring their vision to life, combining quality materials with precision craftsmanship.</p>
+        `;
+        
+        openModal(modalContent);
     });
 });
 
